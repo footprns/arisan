@@ -6,7 +6,7 @@ contract Arisan {
     address payable[] public owners;
 
     constructor(address payable[] memory _owners) {
-        require(_owners.length = 3, "Three owners are required");
+        require(_owners.length == 3, "Three owners are required");
         owners = _owners;
     }
 }
