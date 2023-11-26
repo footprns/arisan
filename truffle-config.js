@@ -44,7 +44,8 @@
 // require('dotenv').config();
 // const { MNEMONIC, PROJECT_ID } = process.env;
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const fs = require('fs');
 
 module.exports = {
   /**
@@ -68,6 +69,11 @@ module.exports = {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 7545,            // Standard Ethereum port (default: none)
      network_id: "*",       // Any network (default: none)
+    },
+    inf_solidity01_sepolia: {
+      network_id: 11155111,
+      gasPrice: 5203044637,
+      provider: new HDWalletProvider(fs.readFileSync('/Users/imankurniawan/Documents/repos/solidity/mnemonic_infura_goerli.env', 'utf-8'), "https://sepolia.infura.io/v3/158c42e1565b4ae3a1148561c8d8135b")
     },
     //
     // An additional network, but with some advanced options…

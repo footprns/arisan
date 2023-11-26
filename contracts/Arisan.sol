@@ -3,6 +3,7 @@
 pragma solidity <=0.8.13;
 
 contract Arisan {
+    string public greet = "This is Arisan Smart Contract POC";
     address payable[] public owners;
     uint256 public unlockTimestamp;
 
