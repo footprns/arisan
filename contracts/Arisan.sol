@@ -40,12 +40,4 @@ contract Arisan {
         // Send the collected funds to the winner
         payable(winner).transfer(address(this).balance);
     }
-
-    function getParticipants() public view returns (address[] memory) {
-        return participants;
-    }
-
-    function getContractBalance() public view returns (uint) {
-        return address(this).balance;
-    }
 }

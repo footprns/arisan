@@ -49,20 +49,20 @@ def execute_arisan():
         contract_abi = json.load(abi_file)
     abi = contract_abi["abi"]
     deployed_contract = w3.eth.contract(address=os.environ['arisan_sc_ganache'], abi=abi)
-    # transaction = deployed_contract.functions.pickWinner().build_transaction({
-    #         'from': os.environ['owner1'],
-    #         'gas': 300000,
-    #         'gasPrice': w3.to_wei('250', 'gwei'),
-    #         'nonce': w3.eth.get_transaction_count(os.environ['owner1']),
-    #     })
-
-    transaction = deployed_contract.functions.joinArisan().build_transaction({
-        'from': os.environ['owner1'],
-        'gas': 300000,
-        'gasPrice': w3.to_wei('250', 'gwei'),
-        'nonce': w3.eth.get_transaction_count(os.environ['owner1']),
-        'value': w3.to_wei(1, 'ether'),  # Set the correct arisan amount in Ether
+    transaction = deployed_contract.functions.pickWinner().build_transaction({
+            'from': os.environ['owner1'],
+            'gas': 300000,
+            'gasPrice': w3.to_wei('10', 'gwei'),
+            'nonce': w3.eth.get_transaction_count(os.environ['owner1'])
     })
+
+    # transaction = deployed_contract.functions.joinArisan().build_transaction({
+    #     'from': os.environ['owner1'],
+    #     'gas': 300000,
+    #     'gasPrice': w3.to_wei('250', 'gwei'),
+    #     'nonce': w3.eth.get_transaction_count(os.environ['owner1']),
+    #     'value': w3.to_wei(1, 'ether'),  # Set the correct arisan amount in Ether
+    # })
 
     # Sign the transaction
     signed_transaction = w3.eth.account.sign_transaction(transaction, os.environ['owner1_privkey'])
