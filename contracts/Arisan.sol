@@ -1,51 +1,51 @@
 // SPDX-License-Identifier: MIT
-// compiler version must be greater than or equal to 0.8.20 and less than 0.9.0
-pragma solidity <=0.8.13;
+pragma solidity ^0.8.13;
 
 contract Arisan {
-    string public greet = "This is Arisan Smart Contract POC";
-    address payable[] public owners;
-    uint256 public unlockTimestamp;
+    address public manager;
+    uint public arisanAmount;
+    address[] public participants;
+    mapping(address => bool) public hasWon; // Mapping to track participants who have won
 
-    constructor(address payable[] memory _owners) {
-        require(_owners.length == 3, "Three owners are required");
-        owners = _owners;
-        // Set the unlock time to one week from contract deployment
-        unlockTimestamp = block.timestamp + 1 minutes;
-    }
-
-
-    modifier onlyAfterUnlock() {
-        require(block.timestamp >= unlockTimestamp, "Funds cannot be withdrawn before unlock time");
+    modifier restricted() {
+        require(msg.sender == manager, "Only the manager can call this function");
         _;
     }
 
-    receive() external payable {}
-
-    // Fallback function is called when msg.data is not empty
-    fallback() external payable {}
-
-    function withdraw(uint _amount) external onlyAfterUnlock {
-        require(isOwner(msg.sender), "Caller is not an owner");
-        require(address(this).balance >= _amount, "Insufficient funds");
-        payable(msg.sender).transfer(_amount);
+    constructor(uint _arisanAmount) {
+        manager = msg.sender;
+        arisanAmount = _arisanAmount;
     }
 
-    function isOwner(address account) internal view returns (bool) {
-        for (uint256 i = 0; i < owners.length; i++) {
-            if (owners[i] == account) {
-                return true;
-            }
-        }
-        return false;
+    function joinArisan() public payable {
+        require(msg.value == arisanAmount, "Incorrect Arisan amount");
+        participants.push(msg.sender);
     }
 
-    // Function to get the remaining time until unlock
-    function getRemainingTime() external view returns (uint256) {
-        if (block.timestamp >= unlockTimestamp) {
-            return 0;
-        } else {
-            return unlockTimestamp - block.timestamp;
-        }
+    function pickWinner() public restricted {
+        require(participants.length > 0, "No participants in the Arisan");
+
+        // Use a pseudo-random function based on the current block's timestamp and participants' addresses
+        uint randomNumber = uint(keccak256(abi.encodePacked(block.timestamp, participants))) % participants.length;
+        
+        // Choose the winner
+        address winner = participants[randomNumber];
+
+        // Ensure that the winner has not won before
+        require(!hasWon[winner], "Participant has already won");
+
+        // Mark the winner as having won
+        hasWon[winner] = true;
+
+        // Send the collected funds to the winner
+        payable(winner).transfer(address(this).balance);
+    }
+
+    function getParticipants() public view returns (address[] memory) {
+        return participants;
+    }
+
+    function getContractBalance() public view returns (uint) {
+        return address(this).balance;
     }
 }
