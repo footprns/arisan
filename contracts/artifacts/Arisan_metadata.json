@@ -30,26 +30,19 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "getContractBalance",
-				"outputs": [
+				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "address",
 						"name": "",
-						"type": "uint256"
+						"type": "address"
 					}
 				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "getParticipants",
+				"name": "hasWon",
 				"outputs": [
 					{
-						"internalType": "address[]",
+						"internalType": "bool",
 						"name": "",
-						"type": "address[]"
+						"type": "bool"
 					}
 				],
 				"stateMutability": "view",
@@ -130,11 +123,11 @@
 	},
 	"sources": {
 		"contracts/Arisan.sol": {
-			"keccak256": "0xea63be73587e9073114d75e0a1d1849c0908812701fc26093c511fc5a049ebcd",
+			"keccak256": "0x542b2b793887b4255acdea658eaa40fb0d1d0d529a2dd036b0752c00d84a230d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bb756f9c198a0b26bac5b6c36e116dc28c5886e92c6fa5f1726e0c6b4c838ed9",
-				"dweb:/ipfs/QmZDu4QyvCpFGnmbb2ZUo1ZPJe3jqZKHxoz5ev4t9UVCnD"
+				"bzz-raw://d3065f61ac1d94b2b2f513560f942c2e9b900a23db23b2e42cb9e06eca6efa74",
+				"dweb:/ipfs/QmTcamnWtgvJfSSYbPo3bxxj1ox7aTXjHfmCdDWnLXdMFr"
 			]
 		}
 	},

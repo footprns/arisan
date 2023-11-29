@@ -5,7 +5,8 @@ from web3.middleware import construct_sign_and_send_raw_middleware
 from dotenv import load_dotenv
 import os
 
-w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:7545'))
+# w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:7545'))
+w3 = Web3(Web3.HTTPProvider('https://polygon-mumbai.infura.io/v3/158c42e1565b4ae3a1148561c8d8135b'))
 
 load_dotenv()
 
@@ -32,10 +33,10 @@ def send_eth(private_key, sender, receiver):
         'nonce': nonce,
         'from': sender,
         'to': receiver,
-        'value': w3.to_wei(1, 'ether'),
+        'value': w3.to_wei(0.01, 'ether'),
         'maxFeePerGas': w3.to_wei('250', 'gwei'),
         'maxPriorityFeePerGas': w3.to_wei('3', 'gwei'),
-        'chainId': 1337
+        'chainId': 80001
     }
     gas = w3.eth.estimate_gas(tx)
     tx['gas'] = gas
@@ -48,24 +49,24 @@ def execute_arisan():
     with open('build/contracts/Arisan.json', 'r') as abi_file:
         contract_abi = json.load(abi_file)
     abi = contract_abi["abi"]
-    deployed_contract = w3.eth.contract(address=os.environ['arisan_sc_ganache'], abi=abi)
-    transaction = deployed_contract.functions.pickWinner().build_transaction({
-            'from': os.environ['owner1'],
-            'gas': 300000,
-            'gasPrice': w3.to_wei('10', 'gwei'),
-            'nonce': w3.eth.get_transaction_count(os.environ['owner1'])
-    })
-
-    # transaction = deployed_contract.functions.joinArisan().build_transaction({
-    #     'from': os.environ['owner1'],
-    #     'gas': 300000,
-    #     'gasPrice': w3.to_wei('250', 'gwei'),
-    #     'nonce': w3.eth.get_transaction_count(os.environ['owner1']),
-    #     'value': w3.to_wei(1, 'ether'),  # Set the correct arisan amount in Ether
+    deployed_contract = w3.eth.contract(address=os.environ['arisan_sc_mumbai_poligon'], abi=abi)
+    # transaction = deployed_contract.functions.pickWinner().build_transaction({
+    #         'from': os.environ['iman_mumbai_poligon_pubkey'],
+    #         'gas': 300000,
+    #         'gasPrice': w3.to_wei('10', 'gwei'),
+    #         'nonce': w3.eth.get_transaction_count(os.environ['iman_mumbai_poligon_pubkey'])
     # })
 
+    transaction = deployed_contract.functions.joinArisan().build_transaction({
+        'from': os.environ['iman_mumbai_poligon_pubkey'],
+        'gas': 300000,
+        'gasPrice': w3.to_wei('250', 'gwei'),
+        'nonce': w3.eth.get_transaction_count(os.environ['iman_mumbai_poligon_pubkey']),
+        'value': w3.to_wei(0.1, 'ether'),  # Set the correct arisan amount in Ether
+    })
+
     # Sign the transaction
-    signed_transaction = w3.eth.account.sign_transaction(transaction, os.environ['owner1_privkey'])
+    signed_transaction = w3.eth.account.sign_transaction(transaction, os.environ['iman_mumbai_poligon_privkey'])
 
     # Send the transaction
     transaction_hash = w3.eth.send_raw_transaction(signed_transaction.rawTransaction)
@@ -75,6 +76,6 @@ def execute_arisan():
     # print(deployed_contract.functions.getRemainingTime().call())  
 
 # send_eth_ganache(sender=os.environ['owner1'], receiver=os.environ['arisan_sc_ganache'])
-# send_eth(private_key=os.environ['owner1_privkey'], sender=os.environ['owner1'], receiver=os.environ['arisan_sc_ganache'])
-execute_arisan()
+send_eth(private_key=os.environ['iman_mumbai_poligon_privkey'], sender=os.environ['iman_mumbai_poligon_pubkey'], receiver='0xAeDee5fe889701d4cFC5A1e1f40764B0C8cc6b9F')
+# execute_arisan()
 

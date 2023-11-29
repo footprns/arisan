@@ -12,13 +12,16 @@ contract Arisan {
         _;
     }
 
-    constructor(uint _arisanAmount) {
+    constructor(uint _arisanAmount, address[] memory _initialParticipants) {
+        require(_initialParticipants.length > 0, "At least one initial participant is required");
         manager = msg.sender;
         arisanAmount = _arisanAmount;
+        participants = _initialParticipants;
     }
 
     function joinArisan() public payable {
         require(msg.value == arisanAmount, "Incorrect Arisan amount");
+        require(isParticipant(msg.sender), "You are not an initial participant");
         participants.push(msg.sender);
     }
 
@@ -39,5 +42,14 @@ contract Arisan {
 
         // Send the collected funds to the winner
         payable(winner).transfer(address(this).balance);
+    }
+
+    function isParticipant(address participant) internal view returns (bool) {
+        for (uint i = 0; i < participants.length; i++) {
+            if (participants[i] == participant) {
+                return true;
+            }
+        }
+        return false;
     }
 }
